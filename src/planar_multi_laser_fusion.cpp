@@ -12,10 +12,10 @@ MultiLaserFusion::MultiLaserFusion() : Node("Planar_multi_laser_fusion"){
     tf_buffer_scan3 = std::make_unique<tf2_ros::Buffer>(this->get_clock());
     tf_buffer_scan4 = std::make_unique<tf2_ros::Buffer>(this->get_clock());
 
-    tf_buffer_scan1->lookupTransform("base_link", "scan1", tf2::TimePointZero);
-    tf_buffer_scan2->lookupTransform("base_link", "scan2", tf2::TimePointZero);
-    tf_buffer_scan3->lookupTransform("base_link", "scan3", tf2::TimePointZero);
-    tf_buffer_scan4->lookupTransform("base_link", "scan4", tf2::TimePointZero);
+    tf_scan1 = tf_buffer_scan1->lookupTransform("base_link", "scan1", tf2::TimePointZero);
+    tf_scan2 = tf_buffer_scan1->lookupTransform("base_link", "scan2", tf2::TimePointZero);
+    tf_scan3 = tf_buffer_scan1->lookupTransform("base_link", "scan3", tf2::TimePointZero);
+    tf_scan4 = tf_buffer_scan1->lookupTransform("base_link", "scan4", tf2::TimePointZero);
     
     init_subscribers();
     init_publishers();
@@ -54,6 +54,14 @@ void MultiLaserFusion::laser_fusion_callback(const sensor_msgs::msg::LaserScan::
     scan3 --------- scan4
     
     */
+    CartesianCoordinates scan1, scan2, scan3, scan4;
+    if (tf_debug){
+        scan1.x = tf_scan1.transform.translation.x;
+        scan1.y = tf_scan1.transform.translation.y;
+        RCLCPP_INFO(this->get_logger(), "");
+    }
+
+
     double index = laser_msg->ranges.size();
     const std::string &frame = laser_msg->header.frame_id;
     for (int i=index/3; i<=index/2; i++){
@@ -61,7 +69,7 @@ void MultiLaserFusion::laser_fusion_callback(const sensor_msgs::msg::LaserScan::
             fused_msg.ranges = laser_msg->ranges;
         }
         else{
-            RCLCPP_WARN(this->get_logger(), "Topic name mismatch, check params");
+            RCLCPP_WARN(this->get_logger(), "Topic name mismatch [scan1], check params");
         }
     }
 
@@ -70,7 +78,7 @@ void MultiLaserFusion::laser_fusion_callback(const sensor_msgs::msg::LaserScan::
             fused_msg.ranges = laser_msg->ranges;
         }
         else{
-            RCLCPP_WARN(this->get_logger(), "Topic name mismatch, check params");
+            RCLCPP_WARN(this->get_logger(), "Topic name mismatch [scan2], check params");
         }
     }
 
@@ -79,7 +87,7 @@ void MultiLaserFusion::laser_fusion_callback(const sensor_msgs::msg::LaserScan::
             fused_msg.ranges = laser_msg->ranges;
         }
         else{
-            RCLCPP_WARN(this->get_logger(), "Topic name mismatch, check params");
+            RCLCPP_WARN(this->get_logger(), "Topic name mismatch [scan3], check params");
         }
     }
 
@@ -88,7 +96,7 @@ void MultiLaserFusion::laser_fusion_callback(const sensor_msgs::msg::LaserScan::
             fused_msg.ranges = laser_msg->ranges;
         }
         else{
-            RCLCPP_WARN(this->get_logger(), "Topic name mismatch, check params");
+            RCLCPP_WARN(this->get_logger(), "Topic name mismatch [scan4], check params");
         }
     }
 

@@ -13,4 +13,9 @@
 #include "tf2/LinearMath/Quaternion.hpp"
 #include "tf2_ros/static_transform_broadcaster.hpp"
 
+struct CartesianCoordinates{
+    double x;
+    double y;
+};
+
 #endif
