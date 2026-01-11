@@ -43,7 +43,7 @@ void MultiLaserFusion::publish_tf(){
 }
 
 void MultiLaserFusion::laser_fusion_callback(const sensor_msgs::msg::LaserScan::SharedPtr laser_msg){
-    /*
+    /* This works in ideal condition, need to add more flexibility after testing code.
     scan2 --------- scan1
     |                   |
     |                   |
@@ -54,31 +54,46 @@ void MultiLaserFusion::laser_fusion_callback(const sensor_msgs::msg::LaserScan::
     scan3 --------- scan4
     
     */
-    
-
-
+    double index = laser_msg->ranges.size();
     const std::string &frame = laser_msg->header.frame_id;
-    if (frame == "scan1"){
-        
+    for (int i=index/3; i<=index/2; i++){
+        if (frame == "scan1"){
+            fused_msg.ranges = laser_msg->ranges;
+        }
+        else{
+            RCLCPP_WARN(this->get_logger(), "Topic name mismatch, check params");
+        }
     }
 
-    else if (frame == "scan2"){
-        ;
+    for (int i=index/4; i<=index/3; i++){
+        if (frame == "scan2"){
+            fused_msg.ranges = laser_msg->ranges;
+        }
+        else{
+            RCLCPP_WARN(this->get_logger(), "Topic name mismatch, check params");
+        }
     }
 
-    else if (frame == "scan3"){
-        ;
+    for (int i=0; i<=index/4; i++){
+        if (frame == "scan3"){
+            fused_msg.ranges = laser_msg->ranges;
+        }
+        else{
+            RCLCPP_WARN(this->get_logger(), "Topic name mismatch, check params");
+        }
     }
 
-    else if (frame== "scan4"){
-        ;
-    }
-
-    else{
-        RCLCPP_WARN(this->get_logger(), "Topic nae mismatch, check params");
+    for (int i=index/2; i<=index; i++){
+        if (frame == "scan1"){
+            fused_msg.ranges = laser_msg->ranges;
+        }
+        else{
+            RCLCPP_WARN(this->get_logger(), "Topic name mismatch, check params");
+        }
     }
 
     publisher_->publish(fused_msg);
+    publish_tf();
 }
 
 void MultiLaserFusion::init_publishers(){
