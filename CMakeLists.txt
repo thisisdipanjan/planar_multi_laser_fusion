@@ -11,6 +11,36 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 
+# Include directories
+include_directories(
+  include
+)
+
+# Create executable
+add_executable(planar_multi_laser_fusion_node
+  src/main.cpp
+  src/planar_multi_laser_fusion.cpp
+)
+
+# Link dependencies
+ament_target_dependencies(planar_multi_laser_fusion_node
+  rclcpp
+  sensor_msgs
+  std_msgs
+)
+
+# Install executable
+install(TARGETS
+  planar_multi_laser_fusion_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install headers
+install(
+  DIRECTORY include/
+  DESTINATION include
+)
+
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
