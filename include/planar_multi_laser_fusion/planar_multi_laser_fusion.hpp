@@ -8,9 +8,9 @@ class MultiLaserFusion : public rclcpp::Node{
         MultiLaserFusion();
         void init_subscribers();
         void init_publishers();
-
-    private:
         bool tf_debug{false};
+        
+    private:
         void publish_tf();
         int total_lasers{};
         sensor_msgs::msg::LaserScan fused_msg;

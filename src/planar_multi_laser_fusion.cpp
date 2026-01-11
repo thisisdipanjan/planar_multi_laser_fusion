@@ -58,7 +58,7 @@ void MultiLaserFusion::laser_fusion_callback(const sensor_msgs::msg::LaserScan::
     if (tf_debug){
         scan1.x = tf_scan1.transform.translation.x;
         scan1.y = tf_scan1.transform.translation.y;
-        RCLCPP_INFO(this->get_logger(), "");
+        RCLCPP_INFO(this->get_logger(), "Printing tf: base_link->scan1 x:", scan1.x, " y:" , scan1.y);
     }
 
 
